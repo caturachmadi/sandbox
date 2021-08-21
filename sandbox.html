@@ -93,7 +93,7 @@
                                            <td scope="row">${noRows}</th>
                                            <td>${books.name}</td>
                                            <td>${books.type_book.name}</td>
-                                           <td><button type="button" class="btn btn-danger">Delete</button></td>
+                                           <td><button type="button" class="btn btn-danger"onclick="confirmDelete(${books.id}, '${books.name}')">Delete</button></td>
                                        </tr>`;
                                    noRows++;
                               });
@@ -139,7 +139,7 @@
                     addBook();
                });
 
-               const confirmDelete = async (classId, name) => {
+               const confirmDelete = async (bookId, name) => {
                     Swal.fire({
                          title: "Are you sure?",
                          text: "Menghapus data buku " + name,
@@ -148,10 +148,22 @@
                     }).then((result) => {
                          console.log(result);
                          if (result.isConfirmed) {
-                              deleteClass(classId);
+                              deleteClass(bookId);
+                              getDataBooks();
                          }
                     });
+               };
+
+               const deleteBooks = async (bookId) => {
+                    try {
+                         const bookDelete = await axios.delete(booksAPI, { data: { id: bookId } });
+                         getDataBooks();
+                         Swal.fire("Deleted!", "Your file has been deleted.", "success");
+                    } catch (err) {
+                         console.log(err.message);
+                    }
                };
           </script>
      </body>
 </html>
+
